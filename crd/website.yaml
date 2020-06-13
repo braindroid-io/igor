@@ -1,0 +1,12 @@
+apiVersion: labs.braindroid.io/v1
+kind: WebSite
+metadata:
+  name: test-site
+spec:
+  image: 'websites/simple:0.0.1'
+  template: arboreal-haze
+  replicas: 3
+  # dataSource:
+  #   type: dataproxy/v1
+  #   # secret will contain auth endpoint client id and client secret for oauth
+  #   secret: test-secret
