@@ -3,16 +3,16 @@ package v1alpha1
 import (
 	"github.com/braindroid-io/igor/api/types/v1alpha1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
-	"k8s.io/apimachinery/pkg/runtime/serializer"
+	// "k8s.io/apimachinery/pkg/runtime/serializer"
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
 )
 
 type V1Alpha1Interface interface {
-	Projects(namespace string) ProjectInterface
+	WebSites(namespace string) WebSiteInterface
 }
 
-type V1Alpha1Interface struct {
+type V1Alpha1Client struct {
 	restClient rest.Interface
 }
 
@@ -31,7 +31,7 @@ func NewForConfig(c *rest.Config) (*V1Alpha1Client, error) {
 	return &V1Alpha1Client{restClient: client}, nil
 }
 
-func (c *V1Alpha1Client) Projects(namespace string) WebSiteInterface {
+func (c *V1Alpha1Client) WebSites(namespace string) WebSiteInterface {
 	return &websiteClient{
 		restClient: c.restClient,
 		ns:         namespace,

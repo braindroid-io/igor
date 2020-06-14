@@ -1,4 +1,4 @@
-apiVersion: labs.braindroid.io/v1
+apiVersion: labs.braindroid.io/v1alpha1
 kind: WebSite
 metadata:
   name: test-site

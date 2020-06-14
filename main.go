@@ -22,41 +22,47 @@ func init() {
 }
 
 func main() {
+	log.Printf("Igor is starting...")
+
 	var config *rest.Config
 	var err error
 
+	log.Printf("What configuration do I have, masterrr?..")
+
 	if kubeconfig == "" {
-		log.Printf("using in-cluster configuration")
+		log.Printf("Ahhh, yes. In-cluster configuration...")
 		config, err = rest.InClusterConfig()
 	} else {
-		log.Printf("using configuration from '%s'", kubeconfig)
+		log.Printf("Yes, master... Using configuration from '%s'", kubeconfig)
 		config, err = clientcmd.BuildConfigFromFlags("", kubeconfig)
 	}
 
 	if err != nil {
-		panic(err)
+		log.Printf("Oh nooo! We have an error!")
+		log.Panic(err.Error())
 	}
 
 	v1alpha1.AddToScheme(scheme.Scheme)
 
 	clientSet, err := clientV1alpha1.NewForConfig(config)
 	if err != nil {
-		panic(err)
+		log.Printf("Oh nooo! We have an error!")
+		log.Panic(err.Error())
 	}
 
 	websites, err := clientSet.WebSites("default").List(metav1.ListOptions{})
 	if err != nil {
-		panic(err)
+		log.Printf("Oh nooo! We have an error!")
+		log.Panic(err.Error())
 	}
 
-	fmt.Printf("websites found: %+v\n", projects)
+	fmt.Printf("Websites found: %+v\n", websites)
 
 	store := WatchResources(clientSet)
 
 	for {
 		websitesFromStore := store.List()
-		fmt.Printf("websites in store: %d\n", len(websitesFromStore))
-
+		fmt.Printf("We have %d websites in store...\n", len(websitesFromStore))
 		time.Sleep(2 * time.Second)
 	}
 }

@@ -1,4 +1,4 @@
-module labs.braindroid.io/igor
+module github.com/braindroid-io/igor
 
 go 1.14
 

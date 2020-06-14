@@ -10,7 +10,7 @@ import (
 
 type WebSiteInterface interface {
 	List(opts metav1.ListOptions) (*v1alpha1.WebSiteList, error)
-	Get(name string, options metav1.GetOptions) (*v1alpha1.Project, error)
+	Get(name string, options metav1.GetOptions) (*v1alpha1.WebSite, error)
 	Create(*v1alpha1.WebSite) (*v1alpha1.WebSite, error)
 	Watch(opts metav1.ListOptions) (watch.Interface, error)
 	// ...
@@ -48,7 +48,7 @@ func (c *websiteClient) Get(name string, opts metav1.GetOptions) (*v1alpha1.WebS
 	return &result, err
 }
 
-func (c *websiteClient) Create(project *v1alpha1.WebSite) (*v1alpha1.WebSite, error) {
+func (c *websiteClient) Create(website *v1alpha1.WebSite) (*v1alpha1.WebSite, error) {
 	result := v1alpha1.WebSite{}
 	err := c.restClient.
 		Post().

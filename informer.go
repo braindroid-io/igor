@@ -16,10 +16,10 @@ func WatchResources(clientSet client_v1alpha1.V1Alpha1Interface) cache.Store {
 	websiteStore, websiteController := cache.NewInformer(
 		&cache.ListWatch{
 			ListFunc: func(lo metav1.ListOptions) (result runtime.Object, err error) {
-				return clientSet.WebSites("some-namespace").List(lo)
+				return clientSet.WebSites("").List(lo)
 			},
 			WatchFunc: func(lo metav1.ListOptions) (watch.Interface, error) {
-				return clientSet.WebSites("some-namespace").Watch(lo)
+				return clientSet.WebSites("").Watch(lo)
 			},
 		},
 		&v1alpha1.WebSite{},

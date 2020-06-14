@@ -1,0 +1,6 @@
+name: igor
+version: '0.0.1'
+image: 'igor:0.0.1'
+entrypoint: '/app/igor'
+registry: 'host.docker.internal:5000/'
+replicas: 1
