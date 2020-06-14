@@ -18,14 +18,14 @@ type WebSiteInterface interface {
 
 type websiteClient struct {
 	restClient rest.Interface
-	ns         string
+	nameSpace         string
 }
 
 func (c *websiteClient) List(opts metav1.ListOptions) (*v1alpha1.WebSiteList, error) {
 	result := v1alpha1.WebSiteList{}
 	err := c.restClient.
 		Get().
-		Namespace(c.ns).
+		Namespace(c.nameSpace).
 		Resource("websites").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Do().
@@ -38,7 +38,7 @@ func (c *websiteClient) Get(name string, opts metav1.GetOptions) (*v1alpha1.WebS
 	result := v1alpha1.WebSite{}
 	err := c.restClient.
 		Get().
-		Namespace(c.ns).
+		Namespace(c.nameSpace).
 		Resource("websites").
 		Name(name).
 		VersionedParams(&opts, scheme.ParameterCodec).
@@ -52,7 +52,7 @@ func (c *websiteClient) Create(website *v1alpha1.WebSite) (*v1alpha1.WebSite, er
 	result := v1alpha1.WebSite{}
 	err := c.restClient.
 		Post().
-		Namespace(c.ns).
+		Namespace(c.nameSpace).
 		Resource("websites").
 		Body(website).
 		Do().
@@ -65,7 +65,7 @@ func (c *websiteClient) Watch(opts metav1.ListOptions) (watch.Interface, error) 
 	opts.Watch = true
 	return c.restClient.
 		Get().
-		Namespace(c.ns).
+		Namespace(c.nameSpace).
 		Resource("websites").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Watch()

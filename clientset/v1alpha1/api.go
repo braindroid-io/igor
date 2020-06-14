@@ -34,6 +34,6 @@ func NewForConfig(c *rest.Config) (*V1Alpha1Client, error) {
 func (c *V1Alpha1Client) WebSites(namespace string) WebSiteInterface {
 	return &websiteClient{
 		restClient: c.restClient,
-		ns:         namespace,
+		nameSpace:         namespace,
 	}
 }
