@@ -3,15 +3,19 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
 	"time"
 	"strings"
+	"os"
 
+	"github.com/braindroid-io/igor/util/logger"
 	"github.com/braindroid-io/igor/api/types/v1alpha1"
 	clientV1alpha1 "github.com/braindroid-io/igor/clientset/v1alpha1"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
 	apiv1 "k8s.io/api/core/v1"
 	"k8s.io/api/apps/v1"
+
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
@@ -19,6 +23,7 @@ import (
 )
 
 var kubeconfig string
+var log *logger.Logger
 
 func init() {
 	flag.StringVar(&kubeconfig, "kubeconfig", "", "path to Kubernetes config file")
@@ -41,7 +46,7 @@ func printWebSite(ws *v1alpha1.WebSite) {
 			ws.Spec.Replicas,
 	));
 
-	log.Print(b.String())
+	log.Info(b.String())
 }
 
 func getDeployments(ws *v1alpha1.WebSite, clientSet *kubernetes.Clientset) (*v1.DeploymentList, error) {
@@ -118,7 +123,7 @@ func createDeploymentForWebSite(ws *v1alpha1.WebSite, clientSet *kubernetes.Clie
 func reconcileDeployments(webSites []interface{}, clientSet *kubernetes.Clientset) {
 	var ws *v1alpha1.WebSite
 
-	log.Printf("Reconciling deployments for website definitions")
+	log.Info("Reconciling deployments for website definitions")
 
 	for i := 0; i < len(webSites); i++ {
 		ws = webSites[i].(*v1alpha1.WebSite)
@@ -131,14 +136,14 @@ func reconcileDeployments(webSites []interface{}, clientSet *kubernetes.Clientse
 		}
 
 		if len(deployments.Items) == 0 {
-			log.Printf("No deployments found, masterrr...");
+			log.Info("No deployments found, masterrr...");
 
 			deployment, err := createDeploymentForWebSite(ws, clientSet)
 			if err != nil {
 				printMessageAndBail("Oh nooo! We have an error creating a deployment!", err)
 			}
 
-			log.Printf("Created deployment: %s", deployment.ObjectMeta.Name);
+			log.Info("Created deployment: %s", deployment.ObjectMeta.Name);
 
 			return
 		}
@@ -146,23 +151,24 @@ func reconcileDeployments(webSites []interface{}, clientSet *kubernetes.Clientse
 }
 
 func printMessageAndBail(msg string, err error) {
-	log.Printf(msg)
-	log.Panic(err.Error())
+	log.Info(msg)
+	log.Error(err.Error())
+	os.Exit(1)
 }
 
 func main() {
-	log.Printf("Igor is starting...")
+	log.Info("Igor is starting...")
 
 	var config *rest.Config
 	var err error
 
-	log.Printf("What configuration do I have, masterrr?..")
+	log.Info("What configuration do I have, masterrr?..")
 
 	if kubeconfig == "" {
-		log.Printf("Ahhh, yes. In-cluster configuration...")
+		log.Info("Ahhh, yes. In-cluster configuration...")
 		config, err = rest.InClusterConfig()
 	} else {
-		log.Printf("Yes, master... Using configuration from '%s'", kubeconfig)
+		log.Info("Yes, master... Using configuration from '%s'", kubeconfig)
 		config, err = clientcmd.BuildConfigFromFlags("", kubeconfig)
 	}
 
@@ -188,7 +194,7 @@ func main() {
 		websitesFromStore := store.List()
 
 		if len(websitesFromStore) > 0 {
-			fmt.Printf("We have %d websites in the store...\n", len(websitesFromStore))
+			log.Info("We have %d websites in the store...\n", len(websitesFromStore))
 
 			reconcileDeployments(websitesFromStore, k8sClientSet);
 		}
