@@ -1,6 +1,8 @@
 # igor
 K8s operator to orchestrate the creation of new site deployments.
 
+![Build](https://github.com/braindroid-io/igor/workflows/Build/badge.svg)
+
 ## Prerequisites
 * A local K8s cluster
 * A local docker registry running on port 5000
