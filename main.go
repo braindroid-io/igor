@@ -66,7 +66,7 @@ func createDeploymentObject(ws *v1alpha1.WebSite) (*v1.Deployment) {
 		ObjectMeta: metav1.ObjectMeta{
 			Name: ws.ObjectMeta.Name,
 			Labels: map[string]string{
-				"app": "igor",
+				"controller": "igor",
 				"website.template": ws.Spec.Template,
 				"website.lineage": string(ws.ObjectMeta.GetUID()),
 			},
@@ -75,14 +75,15 @@ func createDeploymentObject(ws *v1alpha1.WebSite) (*v1.Deployment) {
 			Replicas: int32Ptr(ws.Spec.Replicas),
 			Selector: &metav1.LabelSelector{
 				MatchLabels: map[string]string{
-					"app": "igor",
+					"controller": "igor",
 					"website.lineage": string(ws.ObjectMeta.GetUID()),
 				},
 			},
 			Template: apiv1.PodTemplateSpec{
 				ObjectMeta: metav1.ObjectMeta{
 					Labels: map[string]string{
-						"app": "igor",
+						"controller": "igor",
+						"app": ws.ObjectMeta.Name,
 						"website.template": ws.Spec.Template,
 						"website.lineage": string(ws.ObjectMeta.GetUID()),
 					},

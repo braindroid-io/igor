@@ -3,6 +3,7 @@
 *.dylib
 
 out/
+igor
 
 # Test binary, built with `go test -c`
 *.test
